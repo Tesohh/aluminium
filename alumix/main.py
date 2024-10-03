@@ -2,6 +2,7 @@
 
 import json
 import argparse
+import sys
 
 from get_menu import request_menu, import_menu, xxx
 
@@ -32,6 +33,7 @@ parser.add_argument("-d", "--date",
                     help="display the menu of a certain date")
 
 parser.add_argument("-j", "--json",
+                    action="store_true",
                     help="dump the menu in a json")
 
 parser.add_argument("--noisteria",
@@ -44,6 +46,7 @@ if args.file:
     menu = import_menu(args.file)
 
 elif args.date:
+    raise
     ...
     args.guess
 
@@ -51,4 +54,7 @@ else:
     menu = request_menu(url    = args.url,
                         cache  = args.cache,
                         prefix = "noi_" if args.noisteria else "alumix_")
+
+if args.json:
+    json.dump(menu, sys.stdout, default=lambda obj: obj.as_json(), indent=2)
 

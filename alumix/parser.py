@@ -18,6 +18,11 @@ class MenuChoice:
                           description=None,
                           ingredients=None)
 
+    def as_json(self):
+        return {"name": self.name,
+                "price": self.price,
+                "description": self.description,
+                "ingredients": self.ingredients}
 
 def find_deepest_node(tag: bs4.Tag, *, cur_depth: int = 0) -> tuple[bs4.Tag, int]:
 

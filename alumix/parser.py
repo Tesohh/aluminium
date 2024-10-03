@@ -34,7 +34,7 @@ def find_deepest_node(tag: bs4.Tag, *, cur_depth: int = 0) -> tuple[bs4.Tag, int
     return max(result, key=lambda t: t[1])
 
 def parse_menu_title(div: bs4.Tag) -> str:
-    return div.find("strong").contents[0]
+    return str(div.find("strong").contents[0])
 
 def parse_menu_plate(div: bs4.Tag) -> MenuChoice:
 

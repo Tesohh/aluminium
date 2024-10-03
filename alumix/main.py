@@ -7,7 +7,7 @@ import sys
 from get_menu import import_menu, get_menu_of
 from lang import filter_menu
 from stdkeys import standardize_keys
-
+from cli import Theme, print_menu
 
 DEFAULT_ALUMIX_URL = "https://go.alumix.it/menu/alumix/index.php"
 
@@ -49,6 +49,12 @@ parser.add_argument("--noisteria",
 parser.add_argument("--lang",
                     help="filter the result by language")
 
+parser.add_argument("-s", "--sort",
+                    metavar="BY",
+                    help="...")
+
+## json-dump options
+
 parser.add_argument("-j", "--json",
                     action="store_true",
                     help="dump the menu in a json")
@@ -57,6 +63,14 @@ parser.add_argument("--stdkeys",
                     action="store_true",
                     help="use standard keys for 'go' parsing")
 
+## terminal-dump options
+
+parser.add_argument("-t", "--theme",
+                    help="set the print theme")
+
+parser.add_argument("-P", "--no-pager",
+                    action="store_true",
+                    help="do not call the default pager")
 
 args = parser.parse_args()
 
@@ -64,6 +78,15 @@ prefix = "alumix_"
 
 if args.noisteria:
     raise NotImplementedError
+
+if args.verbose:
+    raise NotImplementedError
+
+if args.theme is None:
+    if sys.stdout.isatty():
+        args.theme = Theme.LIGHT
+    else:
+        args.theme = Theme.NONE
 
 if args.file:
     ## load from direct file
@@ -90,4 +113,6 @@ if args.json:
     json.dump(menu, sys.stdout, default=lambda obj: obj.as_json(), indent=2)
 
 else:
-    ...
+    print_menu(menu  = menu,
+               theme = Theme(args.theme),
+               pager = None if args.no_pager else "pager")

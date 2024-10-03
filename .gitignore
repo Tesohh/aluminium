@@ -3,3 +3,4 @@ old/
 .vscode/
 *.html
 *.php
+**/.env

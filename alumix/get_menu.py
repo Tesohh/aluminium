@@ -4,6 +4,9 @@ import datetime
 import time
 import os
 import re
+import logging
+
+logger = logging.getLogger("alumix")
 
 from parser import parse_menu
 
@@ -49,15 +52,24 @@ def find_menu_of_weekday(weekday: int, cache_dir: str, prefix: str = "") -> str 
             return os.path.join(cache_dir, filename)
 
 def import_menu(filename: str):
+
+    logger.info("Importing menu from file %r", filename)
+
     with open(filename, "rb") as fp:
         return parse_menu(fp.read())
 
 def download_menu(url: str, *, cache_file: str | None = None):
 
+    logger.info("Downloading menu from url %r", url)
+
     with requests.get(url) as response:
+        response.raise_for_status()
+
         content = response.content
 
     if cache_file is not None:
+
+        logger.info("Caching menu to %r", cache_file)
 
         os.makedirs(os.path.dirname(cache_file), exist_ok=True)
 
@@ -90,11 +102,16 @@ def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str =
         ## the menu is not found and can't be download nor guessed
         return None
 
+    logger.info("Guessing menu file for date %s", date)
+
     filename = find_menu_of_weekday(date.weekday(), cache_dir, prefix)
 
     if filename is None:
+        logger.error("Guess failed")
         ## unable to guess the menu
         return None
+
+    logger.info("Guess succeeded: filename=%r", filename)
 
     return import_menu(filename)
 

@@ -1,9 +1,14 @@
 
+import logging
+
+logger = logging.getLogger("alumix")
+
 
 FILTERS = {
     "it": {"menu": ["Primi piatti"], "extras": ["Coperto"]},
     "de": {"menu": ["Warme Vorspeisen"], "extras": ["Gedeck"]}
 }
+
 
 def filter_key(data: dict, key: str, lang: str) -> list:
 
@@ -22,4 +27,7 @@ def filter_key(data: dict, key: str, lang: str) -> list:
     return res
 
 def filter_menu(menu: dict, lang: str) -> dict:
+
+    logger.debug("Filtering menu by language %r", lang)
+
     return {key: filter_key(menu, key, lang) for key in menu}

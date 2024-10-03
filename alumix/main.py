@@ -3,7 +3,8 @@
 import json
 import argparse
 import sys
-import os
+# import os
+import logging
 
 from get_menu import import_menu, get_menu_of
 from lang import filter_menu
@@ -75,12 +76,14 @@ parser.add_argument("-P", "--no-pager",
 
 args = parser.parse_args()
 
+if args.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.CRITICAL + 1)
+
 prefix = "alumix_"
 
 if args.noisteria:
-    raise NotImplementedError
-
-if args.verbose:
     raise NotImplementedError
 
 if args.sort:

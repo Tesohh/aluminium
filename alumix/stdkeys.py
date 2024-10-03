@@ -1,6 +1,9 @@
 
+import logging
 from typing import Generator
 
+
+logger = logging.getLogger("alumix")
 
 
 def wrap_dict(d: dict, *, keyname: str = "key", valname: str = "value") -> list:
@@ -13,6 +16,8 @@ def wrap_dict(d: dict, *, keyname: str = "key", valname: str = "value") -> list:
              valname: value} for key, value in d.items()]
 
 def standardize_keys(menu: dict) -> Generator[tuple, None, None]:
+
+    logger.debug("Standardizing keys")
 
     for key, value in menu.items():
 

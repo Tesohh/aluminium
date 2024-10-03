@@ -6,7 +6,7 @@ import sys
 
 from get_menu import request_menu, import_menu, xxx
 from lang import filter_menu
-
+from stdkeys import standardize_keys
 
 
 DEFAULT_ALUMIX_URL = "https://go.alumix.it/menu/alumix/index.php"
@@ -36,12 +36,17 @@ parser.add_argument("--noisteria",
                     action="store_true",
                     help="load the menu of the noisteria")
 
+parser.add_argument("--lang",
+                    help="filter the result by language")
+
 parser.add_argument("-j", "--json",
                     action="store_true",
                     help="dump the menu in a json")
 
-parser.add_argument("--lang",
-                    help="filter the result by language")
+parser.add_argument("--stdkeys",
+                    action="store_true",
+                    help="use standard keys for 'go' parsing")
+
 
 args = parser.parse_args()
 
@@ -64,6 +69,10 @@ else:
 if args.lang:
     menu = filter_menu(menu, args.lang)
 
+
 if args.json:
+    if args.stdkeys:
+        menu = dict(standardize_keys(menu))
+
     json.dump(menu, sys.stdout, default=lambda obj: obj.as_json(), indent=2)
 

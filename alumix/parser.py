@@ -61,7 +61,6 @@ def parse_table_row(tr: bs4.Tag) -> tuple[str, str]:
 def parse_ul(ul: bs4.Tag) -> dict[str, list[MenuChoice]]:
 
     fields: dict[str, list[MenuChoice]] = {}
-
     last_title = None
 
     for li in ul.find_all("li", recursive=False):

@@ -16,9 +16,11 @@ def standardize_keys(menu: dict) -> Generator[tuple, None, None]:
 
     for key, value in menu.items():
 
-        if not isinstance(value, dict):
-            yield key, value
+        for item in value:
 
-        else:
-            yield key, wrap_dict(value)
+            if isinstance(item, dict):
+                yield key, wrap_dict(item)
+
+            else:
+                yield key, item
 

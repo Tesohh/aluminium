@@ -83,6 +83,9 @@ if args.noisteria:
 if args.verbose:
     raise NotImplementedError
 
+if args.sort:
+    raise NotImplementedError
+
 if args.theme is None:
     if sys.stdout.isatty():
         args.theme = Theme.LIGHT

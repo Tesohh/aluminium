@@ -57,8 +57,6 @@ var Menu = slash.Command{
 			return err
 		}
 
-		fmt.Printf("%#v\n", m)
-
 		embed := discordgo.MessageEmbed{
 			Title:       fmt.Sprintf("Menu %s di %s", restaurant, date),
 			Description: "",
@@ -70,7 +68,7 @@ var Menu = slash.Command{
 			if !ok {
 				prettyTitle = c.Title
 			}
-			embed.Description += fmt.Sprintf("\n**%s**\n", c.Title)
+			embed.Description += fmt.Sprintf("\n**%s**\n", prettyTitle)
 			if len(c.Items) == 0 {
 				embed.Description += "No items found\n"
 				continue
@@ -80,8 +78,6 @@ var Menu = slash.Command{
 				embed.Description += fmt.Sprint(item) + "\n"
 			}
 		}
-
-		fmt.Println("%#v\n", embed)
 
 		return slash.ReplyWithEmbed(s, i, embed)
 	},

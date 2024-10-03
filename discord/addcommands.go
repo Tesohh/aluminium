@@ -12,6 +12,7 @@ import (
 
 var commands = map[string]*slash.Command{
 	"ping": &command.Ping,
+	"menu": &command.Menu,
 }
 var registeredCommands = make([]*discordgo.ApplicationCommand, 0)
 

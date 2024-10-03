@@ -5,3 +5,4 @@ old/
 *.php
 **/.env
 .cache/
+.DS_STORE

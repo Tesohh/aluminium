@@ -3,6 +3,7 @@
 import json
 import argparse
 import sys
+import os
 
 from get_menu import import_menu, get_menu_of
 from lang import filter_menu
@@ -113,6 +114,9 @@ if args.json:
     json.dump(menu, sys.stdout, default=lambda obj: obj.as_json(), indent=2)
 
 else:
+
+    # if not args.no_pager:
+    #     sys.stdout = os.popen("pager", "w")
+
     print_menu(menu  = menu,
-               theme = Theme(args.theme),
-               pager = None if args.no_pager else "pager")
+               theme = Theme(args.theme))

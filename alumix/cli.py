@@ -54,9 +54,7 @@ def format_choice(text: str, price: float, width: int, border: int = 0) -> tuple
 
     return "\n".join(lines), price_str
 
-def print_menu(menu, *, theme: Theme = Theme.NONE, pager: str | None = None, size: tuple[int, int] | None = None) -> None:
-
-    assert not pager, "not implemented yet!"
+def print_menu(menu, *, theme: Theme = Theme.NONE, size: tuple[int, int] | None = None) -> None:
 
     width, height = (size or os.get_terminal_size())
 

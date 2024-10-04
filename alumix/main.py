@@ -112,8 +112,12 @@ else:
                        download_url = args.url,
                        fetch        = args.force)
 
-if menu is None:
+if not menu:
     sys.stderr.write("Unable to load menu\n")
+
+    if args.json:
+        sys.stdout.write("{}\n")
+
     sys.exit(1)
 
 if args.lang:

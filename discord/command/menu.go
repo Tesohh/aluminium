@@ -58,7 +58,7 @@ var Menu = slash.Command{
 				date = dateOpt.StringValue()
 			}
 
-			m, err := menu.GetMenu("it", date)
+			m, err := menu.GetMenu("it", date, restaurant)
 			if err != nil {
 				return err
 			}

@@ -8,8 +8,8 @@ import (
 	"os/exec"
 )
 
-func GetMenu(lang string, date string) (Menu, error) {
-	cmd := exec.Command("python3", "alumix/main.py", "--json", "--guess", "--std", "--lang", lang, "--", date)
+func GetMenu(lang string, date string, restaurant string) (Menu, error) {
+	cmd := exec.Command("python3", "alumix/main.py", "--json", "--guess", "--std", "--lang", lang, "--restaurant", restaurant, "--", date)
 
 	stdout := bytes.NewBuffer(make([]byte, 0))
 	cmd.Stdout = stdout

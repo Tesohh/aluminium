@@ -76,6 +76,12 @@ def download_menu(url: str, *, cache_file: str | None = None):
 
         content = response.content
 
+    parsed = parse_menu(content)
+
+    if not parsed:
+        logger.warning("The menu is not available")
+        return parsed
+
     if cache_file is not None:
 
         logger.info("Caching menu to %r", cache_file)
@@ -85,7 +91,7 @@ def download_menu(url: str, *, cache_file: str | None = None):
         with open(cache_file, "wb") as fp:
             fp.write(content)
 
-    return parse_menu(content)
+    return parsed
 
 def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str = "", cache_dir: str | None = None, download_url: str, fetch: bool = False):
 

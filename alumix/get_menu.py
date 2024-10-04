@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger("alumix")
 
 from parser import parse_menu
-
+from lang import get_weekday
 
 SECS_PER_DAY = 86_400
 CACHED_MENU_PATTERN = r"(.+)?menu_of_(\d+-\d+-\d+).(?:html)|(?:php)"
@@ -29,7 +29,16 @@ def parse_date(date: str) -> datetime.date:
             return datetime.date.fromtimestamp(time.time() + SECS_PER_DAY)
 
         case default:
-            return datetime.date.fromisoformat(default)
+
+            weekday, prob = get_weekday(default)
+
+            if prob < 0.2:
+                return datetime.date.fromisoformat(default)
+
+            delta_day = datetime.date.today().weekday() - weekday
+
+            return datetime.date.fromtimestamp(time.time() - SECS_PER_DAY * delta_day)
+
 
 def get_menu_filename(prefix: str, date: datetime.date, cache_dir: str = ".cache/") -> str:
     return os.path.join(cache_dir, "%smenu_of_%s.html" % (prefix, date))

@@ -19,13 +19,13 @@ def parse_date(date: str) -> datetime.date:
 
     match date.lower():
 
-        case "today":
+        case "today" | "oggi" | "heute":
             return datetime.date.today()
 
-        case "yesterday":
+        case "yesterday" | "ieri" | "gestern":
             return datetime.date.fromtimestamp(time.time() - SECS_PER_DAY)
 
-        case "tomorrow":
+        case "tomorrow" | "domani" | "morgen":
             return datetime.date.fromtimestamp(time.time() + SECS_PER_DAY)
 
         case default:

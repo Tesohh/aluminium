@@ -87,7 +87,7 @@ def download_menu(url: str, *, cache_file: str | None = None):
 
     return parse_menu(content)
 
-def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str = "", cache_dir: str | None = None, download_url: str):
+def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str = "", cache_dir: str | None = None, download_url: str, fetch: bool = False):
 
     if cache_dir is None:
         return download_menu(url        = download_url,
@@ -98,7 +98,7 @@ def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str =
 
     cache_filename = get_menu_filename(prefix, date, cache_dir)
 
-    if os.path.exists(cache_filename):
+    if os.path.exists(cache_filename) and not fetch:
         ## there is a cached file (perfect!)
         return import_menu(cache_filename)
 

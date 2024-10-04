@@ -11,6 +11,7 @@ from lang import filter_menu
 from stdkeys import standardize_keys
 from cli import Theme, print_menu
 
+
 DEFAULT_ALUMIX_URL = "https://go.alumix.it/menu/alumix/index.php"
 
 
@@ -35,6 +36,10 @@ parser.add_argument("-u", "--url",
 
 parser.add_argument("-f", "--file",
                     help="read the menu from this file instead of requesting it")
+
+parser.add_argument("-F", "--force", "--fetch",
+                    action="store_true",
+                    help="fetch the menu even if it exists in the local caches")
 
 parser.add_argument("-g", "--guess",
                     action="store_true",
@@ -104,7 +109,8 @@ else:
                        guess        = args.guess,
                        prefix       = prefix,
                        cache_dir    = None if args.no_cache else args.cache_dir,
-                       download_url = args.url)
+                       download_url = args.url,
+                       fetch        = args.force)
 
 if menu is None:
     sys.stderr.write("Unable to load menu\n")

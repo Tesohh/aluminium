@@ -13,6 +13,7 @@ from cli import Theme, print_menu
 
 
 DEFAULT_ALUMIX_URL = "https://go.alumix.it/menu/alumix/index.php"
+DEFAULT_NOISTERIA_URL = "https://go.alumix.it/menu/noisteria/index.php"
 
 
 parser = argparse.ArgumentParser()
@@ -32,7 +33,7 @@ parser.add_argument("-C", "--cache-dir",
 
 parser.add_argument("-u", "--url",
                     help="set the alumix menu url",
-                    default=DEFAULT_ALUMIX_URL)
+                    default=None)
 
 parser.add_argument("-f", "--file",
                     help="read the menu from this file instead of requesting it")
@@ -49,9 +50,10 @@ parser.add_argument("-v", "--verbose",
                     action="store_true",
                     help="show what's being doing")
 
-parser.add_argument("--noisteria",
-                    action="store_true",
-                    help="load the menu of the noisteria")
+parser.add_argument("-r", "--restaurant",
+                    choices=["alumix", "noisteria"],
+                    default="alumix",
+                    help="set the restaurant (changes the URL and the PREFIX)")
 
 parser.add_argument("--lang",
                     help="filter the result by language")
@@ -86,10 +88,16 @@ if args.verbose:
 else:
     logging.basicConfig(level=logging.CRITICAL + 1)
 
-prefix = "alumix_"
 
-if args.noisteria:
-    raise NotImplementedError
+if args.restaurant == "alumix":
+    prefix = "alumix_"
+    default_url = DEFAULT_ALUMIX_URL
+elif args.restaurant == "noisteria":
+    prefix = "nois_"
+    default_url = DEFAULT_NOISTERIA_URL
+else:
+    raise NotImplementedError("oops")
+
 
 if args.sort:
     raise NotImplementedError
@@ -109,7 +117,7 @@ else:
                        guess        = args.guess,
                        prefix       = prefix,
                        cache_dir    = None if args.no_cache else args.cache_dir,
-                       download_url = args.url,
+                       download_url = args.url or default_url,
                        fetch        = args.force)
 
 if not menu:

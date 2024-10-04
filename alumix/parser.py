@@ -39,12 +39,12 @@ def find_deepest_node(tag: bs4.Tag, *, cur_depth: int = 0) -> tuple[bs4.Tag, int
 
 def parse_menu_title(div: bs4.Tag) -> str:
     """parse a div containing the menu title"""
-    return str(div.find("strong").contents[0])
+    return str(find_deepest_node(div)[0].contents[0]).strip()
 
 def parse_menu_plate(div: bs4.Tag) -> MenuChoice:
     """parse a div containing a menu plate"""
 
-    return MenuChoice(name=str(div.find("h3").contents[0]),
+    return MenuChoice(name=str(div.find("h3").contents[0]).strip(),
                       price=float(str(div.find("strong").contents[0]).replace(",", ".")),
                       description=None,
                       ingredients=None if (h5 := div.find("h5")) is None else str(h5.contents[0]))

@@ -3,4 +3,4 @@
 - [ ] (discord) Diff
 - [x] (backend) date in italiano
 - [x] (backend) date settimanali (lunedì', martedì', ...)
-- [ ] (discord) autocomplete per le date
+- [x] (discord) autocomplete per le date

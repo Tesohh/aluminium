@@ -1,4 +1,5 @@
-- [ ] (backend) rifiuta menu non disponibile
+- [x] (backend) opzione per selezionare ristorante tramite -r alumix || -r noisteria
+- [x] (backend) rifiuta menu non disponibile
 - [ ] (backend) Diff
 - [x] (backend) date in italiano
 - [x] (backend) date settimanali (lunedì', martedì', ...)

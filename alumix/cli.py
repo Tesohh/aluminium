@@ -2,7 +2,7 @@
 import os
 import enum
 from dataclasses import dataclass
-
+from menu import Menu
 
 class Theme(enum.StrEnum):
     LIGHT = "light"
@@ -54,15 +54,15 @@ def format_choice(text: str, price: float, width: int, border: int = 0) -> tuple
 
     return "\n".join(lines), price_str
 
-def print_menu(menu, *, theme: Theme = Theme.NONE, size: tuple[int, int] | None = None) -> None:
+def print_menu(menu: Menu, *, theme: Theme = Theme.NONE, size: tuple[int, int] | None = None) -> None:
 
     width, height = (size or os.get_terminal_size())
 
     colors = COLORS[theme]
 
-    for menu in menu["menu"]:
+    for menu_entry in menu.menu:
 
-        for category, choices in menu.items():
+        for category, choices in menu_entry.items():
 
             print(TITLE_TEMPLATE.format(color  = colors.title,
                                         before = "".center(width),

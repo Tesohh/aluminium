@@ -1,6 +1,9 @@
 
 import logging
 import difflib
+from menu import Menu, MenuChoice
+from typing import Generator
+
 
 logger = logging.getLogger("alumix")
 
@@ -31,24 +34,19 @@ def get_weekday(name: str) -> tuple[int, float]:
 
     return weekdays[found], similarity
 
-def filter_key(data: dict, key: str, lang: str) -> list:
+def filter_menu_lang(data: list[dict[str, list[MenuChoice]]], key: str, lang: str) -> Generator[dict, None, None]:
 
-    if not key in FILTERS[lang]:
-        return data[key]
+    for item in data:
 
-    res = []
-
-    for menu_item in data[key]:
-
-        if set(FILTERS[lang][key]) - set(menu_item):
+        if set(FILTERS[lang][key]) - set(item):
             continue
 
-        res.append(menu_item)
+        yield item
 
-    return res
-
-def filter_menu(menu: dict, lang: str) -> dict:
+def filter_menu(menu: Menu, lang: str) -> None:
+    """filter the menu my a given language"""
 
     logger.debug("Filtering menu by language %r", lang)
 
-    return {key: filter_key(menu, key, lang) for key in menu}
+    menu.menu = list(filter_menu_lang(menu.menu, "menu", lang))
+    menu.extras = list(filter_menu_lang(menu.extras, "extras", lang))

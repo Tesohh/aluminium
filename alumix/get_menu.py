@@ -6,8 +6,10 @@ import os
 import re
 import logging
 
+
 logger = logging.getLogger("alumix")
 
+from menu import Menu, GetMode
 from parser import parse_menu
 from lang import get_weekday
 
@@ -39,7 +41,6 @@ def parse_date(date: str) -> datetime.date:
 
             return datetime.date.fromtimestamp(time.time() - SECS_PER_DAY * delta_day)
 
-
 def get_menu_filename(prefix: str, date: datetime.date, cache_dir: str = ".cache/") -> str:
     return os.path.join(cache_dir, "%smenu_of_%s.html" % (prefix, date))
 
@@ -67,18 +68,17 @@ def import_menu(filename: str):
     with open(filename, "rb") as fp:
         return parse_menu(fp.read())
 
-def download_menu(url: str, *, cache_file: str | None = None):
+def download_menu(url: str, *, cache_file: str | None = None) -> Menu:
 
     logger.info("Downloading menu from url %r", url)
 
     with requests.get(url) as response:
         response.raise_for_status()
-
         content = response.content
 
     parsed = parse_menu(content)
 
-    if not parsed:
+    if not parsed.menu:
         logger.warning("The menu is not available")
         return parsed
 
@@ -93,11 +93,27 @@ def download_menu(url: str, *, cache_file: str | None = None):
 
     return parsed
 
-def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str = "", cache_dir: str | None = None, download_url: str, fetch: bool = False):
+def complete_menu(menu: Menu, date: datetime.date | None, mode: GetMode | None) -> Menu:
+
+    if date is not None:
+        menu.date = date
+
+    if mode is not None:
+        menu.get_mode = mode
+
+    return menu
+
+def get_menu_of(date: str | datetime.date, *, filename: str | None = None, guess: bool = False, prefix: str = "", cache_dir: str | None = None, url: str, fetch: bool = False) -> Menu | None:
+
+    if filename is not None:
+        return complete_menu(menu=import_menu(filename=filename),
+                             date=None,
+                             mode=GetMode.IMPORTED)
 
     if cache_dir is None:
-        return download_menu(url        = download_url,
-                             cache_file = None)
+        return complete_menu(menu=download_menu(url, cache_file=None),
+                             date=None,
+                             mode=GetMode.FETCHED)
 
     if isinstance(date, str):
         date = parse_date(date)
@@ -106,12 +122,15 @@ def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str =
 
     if os.path.exists(cache_filename) and not fetch:
         ## there is a cached file (perfect!)
-        return import_menu(cache_filename)
+        return complete_menu(menu=import_menu(cache_filename),
+                             date=date,
+                             mode=GetMode.CACHED)
 
     if date == datetime.date.today():
         ## the menu can be downloaded
-        return download_menu(url        = download_url,
-                             cache_file = cache_filename)
+        return complete_menu(menu=download_menu(url, cache_file=cache_filename),
+                             date=date,
+                             mode=GetMode.FETCHED)
 
     if not guess:
         ## the menu is not found and can't be download nor guessed
@@ -128,5 +147,7 @@ def get_menu_of(date: str | datetime.date, *, guess: bool = False, prefix: str =
 
     logger.info("Guess succeeded: filename=%r", filename)
 
-    return import_menu(filename)
+    return complete_menu(menu=import_menu(filename),
+                         date=date,
+                         mode=GetMode.GUESSED)
 

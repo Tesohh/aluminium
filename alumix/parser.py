@@ -2,30 +2,13 @@
 from __future__ import annotations
 
 import bs4
-from dataclasses import dataclass
 import logging
+
+from menu import Menu, MenuChoice
+
 
 logger = logging.getLogger("alumix")
 
-@dataclass
-class MenuChoice:
-    name:        str
-    price:       float | None
-    description: str | None
-    ingredients: str | None
-
-    @classmethod
-    def empty(cls) -> MenuChoice:
-        return MenuChoice(name="",
-                          price=None,
-                          description=None,
-                          ingredients=None)
-
-    def as_json(self):
-        return {"name": self.name,
-                "price": self.price,
-                "description": self.description,
-                "ingredients": self.ingredients}
 
 def find_deepest_node(tag: bs4.Tag, *, cur_depth: int = 0) -> tuple[bs4.Tag, int]:
     """find the deepest children node of a tag"""
@@ -93,14 +76,14 @@ def parse_ul(ul: bs4.Tag) -> dict[str, list[MenuChoice]]:
 
     return fields
 
-def parse_menu(html: str | bytes) -> dict:
+def parse_menu(html: str | bytes) -> Menu:
     """parse the menu and extra data in a html file"""
 
     logger.debug("Parsing html data")
 
     soup = bs4.BeautifulSoup(html, "html.parser")
 
-    result: dict[str, list] = {}
+    menu = Menu(None, None, [], [])
 
     for ul in soup.find_all("ul", {"class": ["nav", "nav-pills", "nav-stacked"]}):
 
@@ -108,11 +91,12 @@ def parse_menu(html: str | bytes) -> dict:
 
         if ul.find_all("h3", {"class": "coTex"}):
             ## is a menu table
-            result.setdefault("menu", []).append(parse_ul(ul))
+            menu.menu.append(parse_ul(ul))
 
         else:
             ## extra data
-            result.setdefault("extras", []).append(parse_table_row(ul.find("tr")))
+            key, value = parse_table_row(ul.find("tr"))
+            menu.extras.append({key: value})
 
-    return result
+    return menu
 

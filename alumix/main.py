@@ -6,9 +6,8 @@ import sys
 # import os
 import logging
 
-from get_menu import import_menu, get_menu_of
+from get_menu import get_menu_of
 from lang import filter_menu
-from stdkeys import standardize_keys
 from cli import Theme, print_menu
 
 
@@ -108,19 +107,15 @@ if args.theme is None:
     else:
         args.theme = Theme.NONE
 
-if args.file:
-    ## load from direct file
-    menu = import_menu(args.file)
+menu = get_menu_of(date      = args.date,
+                   filename  = args.file,
+                   guess     = args.guess,
+                   prefix    = prefix,
+                   cache_dir = None if args.no_cache else args.cache_dir,
+                   url       = args.url or default_url,
+                   fetch     = args.force)
 
-else:
-    menu = get_menu_of(date         = args.date,
-                       guess        = args.guess,
-                       prefix       = prefix,
-                       cache_dir    = None if args.no_cache else args.cache_dir,
-                       download_url = args.url or default_url,
-                       fetch        = args.force)
-
-if not menu:
+if menu is None or not menu.menu:
     sys.stderr.write("Unable to load menu\n")
 
     if args.json:
@@ -129,13 +124,13 @@ if not menu:
     sys.exit(1)
 
 if args.lang:
-    menu = filter_menu(menu, args.lang)
+    filter_menu(menu, args.lang)
 
 if args.json:
-    if args.stdkeys:
-        menu = dict(standardize_keys(menu))
 
-    json.dump(menu, sys.stdout, default=lambda obj: obj.as_json(), indent=2)
+    data = menu.as_json(stdkeys=args.stdkeys)
+
+    json.dump(data, sys.stdout, default=lambda obj: obj.as_json(), indent=2)
 
 else:
 

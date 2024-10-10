@@ -68,7 +68,6 @@ def import_menu(filename: str):
     with open(filename, "rb") as fp:
         return parse_menu(fp.read())
 
-<<<<<<< HEAD
 def save_menu(data: bytes, filename: str) -> None:
     logger.info("Saving menu to %r", filename)
 
@@ -77,10 +76,7 @@ def save_menu(data: bytes, filename: str) -> None:
     with open(filename, "wb") as fp:
         fp.write(data)
 
-def download_menu(url: str, *, cache_file: str | None = None):
-=======
 def download_menu(url: str, *, cache_file: str | None = None) -> Menu:
->>>>>>> refs/remotes/origin/refactory
 
     logger.info("Downloading menu from url %r", url)
 
@@ -96,7 +92,7 @@ def download_menu(url: str, *, cache_file: str | None = None) -> Menu:
         if cache_file is not None:
             save_menu(content, cache_file + ".broken")
 
-        return None
+        raise
 
     if not parsed.menu:
         logger.warning("The menu is not available")

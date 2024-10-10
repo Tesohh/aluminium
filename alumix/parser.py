@@ -39,7 +39,8 @@ def find_deepest_node(tag: bs4.Tag, *, cur_depth: int = 0) -> tuple[bs4.Tag, int
 
 def parse_menu_title(div: bs4.Tag) -> str:
     """parse a div containing the menu title"""
-    return str(find_deepest_node(div)[0].contents[0]).strip()
+    contents = ", ".join(map(str, find_deepest_node(div)[0].contents))
+    return contents or "Unknown"
 
 def parse_menu_plate(div: bs4.Tag) -> MenuChoice:
     """parse a div containing a menu plate"""

@@ -13,7 +13,6 @@ FROM python:3.12-alpine3.20
 
 WORKDIR /app
 
-COPY .env .
 COPY alumix/ ./alumix
 COPY requirements.txt .
 

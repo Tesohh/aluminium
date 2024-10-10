@@ -1,5 +1,2 @@
-discord.py
-python-dotenv
-certifi
-beautifulsoup4
-aiohttp
+requests
+bs4

@@ -67,6 +67,14 @@ def import_menu(filename: str):
     with open(filename, "rb") as fp:
         return parse_menu(fp.read())
 
+def save_menu(data: bytes, filename: str) -> None:
+    logger.info("Saving menu to %r", filename)
+
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    with open(filename, "wb") as fp:
+        fp.write(data)
+
 def download_menu(url: str, *, cache_file: str | None = None):
 
     logger.info("Downloading menu from url %r", url)
@@ -76,20 +84,22 @@ def download_menu(url: str, *, cache_file: str | None = None):
 
         content = response.content
 
-    parsed = parse_menu(content)
+    try:
+        parsed = parse_menu(content)
+    except Exception as err:
+        logger.error("Unable to parse menu: %s: %s", type(err).__qualname__, str(err))
+
+        if cache_file is not None:
+            save_menu(content, cache_file + ".broken")
+
+        return None
 
     if not parsed:
         logger.warning("The menu is not available")
         return parsed
 
     if cache_file is not None:
-
-        logger.info("Caching menu to %r", cache_file)
-
-        os.makedirs(os.path.dirname(cache_file), exist_ok=True)
-
-        with open(cache_file, "wb") as fp:
-            fp.write(content)
+        save_menu(content, cache_file)
 
     return parsed
 

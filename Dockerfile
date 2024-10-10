@@ -17,7 +17,7 @@ COPY .env .
 COPY alumix/ ./alumix
 COPY requirements.txt .
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt --no-cache
 
 COPY --from=build /build/alumix-ceo .
 

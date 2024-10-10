@@ -64,11 +64,11 @@ var Menu = slash.Command{
 			}
 
 			embed := discordgo.MessageEmbed{
-				Title:       fmt.Sprintf("Menu %s di %s", restaurant, date),
+				Title:       fmt.Sprintf("Menu %s di %s (%s)", restaurant, m.Date, m.Mode),
 				Description: "",
 			}
 
-			for _, c := range m.Categories {
+			for _, c := range m.Categories[0] {
 				prettyTitle, ok := menu.CategoryToPrettyTitle[c.Title]
 				if !ok {
 					prettyTitle = c.Title
